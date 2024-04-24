@@ -43,6 +43,14 @@ class CustomDataset(Dataset):
                 "labels": torch.tensor(category_mapping[r.CATEGORY]).to(self.device),
                 'unique_id': torch.tensor(idx)
             }
+    
+    def get_list_item(self, idxs):
+        texts = [self.anot.iloc[idx].TITLE for idx in idxs]
+        input_ids = self.tokenizer(texts, return_tensors='pt', padding='max_length', truncation=True, max_length=self.max_seq_len).to(self.device)
+        return {
+                "input_ids": input_ids["input_ids"],
+                "attention_mask": input_ids["attention_mask"]
+            }
 
 
 def constrastive_loss(

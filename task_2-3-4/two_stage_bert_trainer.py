@@ -1,5 +1,4 @@
 from torch.nn import functional as F
-
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
@@ -260,7 +259,7 @@ def train(
                 print(f"stage #2 epoch: {epoch}\ttrain loss: {train_loss: .4f}\tval loss: {val_loss: .4f}\tval accuracy: {val_acc: .4f}\ttest accuracy: {test_acc: .4f}")
                 logging.info(f"stage #2 epoch: {epoch}\ttrain loss: {train_loss: .4f}\tval loss: {val_loss: .4f}\tval accuracy: {val_acc: .4f}\ttest accuracy: {test_acc: .4f}")
     # wandb.finish()
-    
+        
 
 if __name__ == "__main__":
     train(batch_size=128)
