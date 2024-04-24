@@ -157,6 +157,9 @@ def train(
             for i, rep in enumerate(outputs['reps']):
                 label = batch['labels'][i].item()
                 reps[label].append(rep.cpu())
+        
+        for key in reps.keys():
+            reps[key] = torch.stack(reps[key])
     
         for batch in tqdm(trainloader):
             for i, rep in enumerate(outputs['reps']):
@@ -167,8 +170,9 @@ def train(
                 for key in reps.keys():
                     if key != label:
                         neg_reps += reps[key]
-                positive_distance = torch.stack([pdist(rep.cpu(), p) for p in pos_reps])
-                negative_distance = torch.stack([pdist(rep.cpu(), n) for n in neg_reps])
+                neg_reps = torch.stack(neg_reps)
+                positive_distance = pdist(rep.cpu().expand(pos_reps.size()), pos_reps)
+                negative_distance = pdist(rep.cpu().expand(neg_reps.size()), neg_reps)
                 positive_index = torch.argmax(positive_distance)
                 negative_index = torch.argmin(negative_distance)
                 triplet[unique_id] = {'pos': pos_reps[positive_index.item()], 'neg': neg_reps[negative_index.item()]}
